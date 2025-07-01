@@ -6,14 +6,16 @@ import {
   cloneLayout,
   synchronizeLayoutWithChildren,
   Layout,
-  getNonFragmentChildren
+  getNonFragmentChildren,
+  noop,
 } from "./utils";
 import {
   getBreakpointFromWidth,
   getColsFromBreakpoint,
   findOrGenerateResponsiveLayout,
   ResponsiveLayout,
-  Breakpoints
+  Breakpoints,
+  OnLayoutChangeCallback,
 } from "./responsiveUtils";
 import VueGridLayout from "./VueGridLayout";
 
@@ -129,10 +131,10 @@ const ResponsiveVueGridLayout = defineComponent({
       type: String as PropType<"vertical" | "horizontal">,
       default: "vertical"
     },
-    // layoutChange: {
-    //   type: Function as PropType<OnLayoutChangeCallback>,
-    //   default: noop
-    // },
+    onLayoutChange: {
+      type: Function as PropType<OnLayoutChangeCallback>,
+      default: noop
+    },
     // breakpointChange: {
     //   type: Function as PropType<(breakpoint: string, cols: number) => void>,
     //   default: noop
@@ -239,7 +241,9 @@ const ResponsiveVueGridLayout = defineComponent({
         newLayouts[newBreakpoint] = layout;
 
         emit('breakpointChange', newBreakpoint, newCols)
-        emit('layoutChange', layout, newLayouts || [])
+        // emit('layoutChange', layout, newLayouts || [])
+        const { onLayoutChange } = props;
+        onLayoutChange && onLayoutChange(layout, newLayouts);
 
         state.breakpoint = newBreakpoint;
         state.layout = layout

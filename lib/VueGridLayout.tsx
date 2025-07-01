@@ -1,6 +1,6 @@
 import { defineComponent, VNode, reactive, ref, onMounted, h, Fragment, watch } from 'vue'
 import { deepEqual } from "fast-equals";
-import { pick } from 'lodash'
+import { pick, cloneDeep } from 'lodash'
 import clsx from "clsx";
 import {
   bottom,
@@ -111,8 +111,10 @@ const VueGridLayout = defineComponent({
     const onLayoutMaybeChanged = (newLayout: Layout, oldLayout?: Layout | null) => {
       if (!oldLayout) oldLayout = state.layout;
       if (!deepEqual(oldLayout, newLayout)) {
+
+        // N.B: 支持受控 @zongze.li
         emit('layoutChange', newLayout);
-        emit('update:modelValue', newLayout)
+        // emit('update:modelValue', newLayout, oldLayout)
       }
     };
 
@@ -124,8 +126,9 @@ const VueGridLayout = defineComponent({
       if (!nextState.activeDrag) {
         const newLayout = nextState.layout;
         const oldLayout = prevState.layout;
-  
-        onLayoutMaybeChanged(newLayout, oldLayout);
+
+        // N.B: 支持受控 @zongze.li
+        // onLayoutMaybeChanged(newLayout, oldLayout);
       }
     }, { deep: true })
 
@@ -154,7 +157,8 @@ const VueGridLayout = defineComponent({
           compactType(pick(nextProps, ['verticalCompact', 'compactType'])),
           nextProps.allowOverlap
         );
-    
+
+        // N.B: data-grid 的处理 @zongze.li
         onLayoutMaybeChanged(layout, state.layout);
         state.layout = layout;
         state.compactType = nextProps.compactType;
@@ -315,6 +319,10 @@ const VueGridLayout = defineComponent({
     const onDrag = (i: string, x: number, y: number, { e, node }: GridDragEvent) => {
       const { oldDragItem } = state;
       let { layout } = state;
+
+      // N.B: 支持受控 @zongze.li
+      layout = cloneDeep(layout);
+
       const { cols, allowOverlap, preventCollision } = props;
       const l = getLayoutItem(layout, i);
       if (!l) return;
@@ -339,7 +347,10 @@ const VueGridLayout = defineComponent({
       // props.dragFn(layout, oldDragItem, l, placeholder, e, node);
       // emit('drag', { layout, oldItem: oldDragItem, item: l, placeholder, event: e });
       vAttrs.onDrag?.(layout, oldDragItem, l, placeholder, e, node);
-      state.layout = allowOverlap ? layout : compact(layout, compactType(props), cols);
+
+      // N.B: 支持受控 @zongze.li
+      // state.layout = allowOverlap ? layout : compact(layout, compactType(props), cols);
+
       state.activeDrag = placeholder;
     };
 
@@ -399,7 +410,11 @@ const VueGridLayout = defineComponent({
       if (!state.activeDrag) return;
 
       const { oldDragItem, oldLayout } = state;
-      let layout = state.layout;
+
+      // N.B: 支持受控 @zongze.li
+      // let layout = state.layout;
+      let layout = cloneDeep(state.layout);
+
       const { cols, preventCollision, allowOverlap } = props;
       const l = getLayoutItem(layout, i);
       if (!l) return;
@@ -424,7 +439,10 @@ const VueGridLayout = defineComponent({
       // emit('dragStop', { layout: newLayout, oldItem: oldDragItem, item: l, event: e });
 
       state.activeDrag = null;
-      state.layout = newLayout;
+
+      // N.B: 支持受控 @zongze.li
+      // state.layout = newLayout;
+
       state.oldDragItem = null;
       state.oldLayout = null;
 
