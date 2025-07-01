@@ -44,6 +44,9 @@ const App = {
 
     const onLayoutChange = (layout, layouts) => {
       state.layout = layout;
+      if (layouts) {
+        state.layouts = layouts;
+      }
     }
   
 
@@ -101,7 +104,7 @@ const App = {
         :cols="{ lg: 12, md: 12, sm: 12, xs: 12, xxs: 12 }"
         :layouts="state.layouts"
         @breakpointChange={onBreakpointChange}
-        @layoutChange="onLayoutChange"
+        :onLayoutChange="onLayoutChange"
         @dropDragOver="onDropDragOver"
         @drop="onDrop"
         @dragStop="onDragStop"

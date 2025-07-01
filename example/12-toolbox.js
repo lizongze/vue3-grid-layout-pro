@@ -78,6 +78,9 @@ const App = {
 
     const onLayoutChange = (layout, layouts) => {
       state.layout = layout;
+      if (layouts) {
+        state.layouts = layouts;
+      }
     }
 
     const onPutItem = item => {
@@ -142,7 +145,7 @@ const App = {
         :cols="state.cols"
         :layouts="state.layouts"
         @breakpointChange={onBreakpointChange}
-        @layoutChange="onLayoutChange"
+        :onLayoutChange="onLayoutChange"
         :measureBeforeMount="false"
         :useCSSTransforms="state.mounted"
         :compactType="state.compactType"

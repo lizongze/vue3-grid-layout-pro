@@ -26,8 +26,17 @@ const App = {
     onMounted(() => {
     
     })
-
+    const handleLayoutChange = (layout, newLayout) => {
+      console.log('layout change --', layout, newLayout)
+      state.layout = layout;
+    }
+    const handleLayoutChange2 = (layout, newLayout) => {
+      console.log('layout2 change --', layout, newLayout)
+      state.layout2 = layout;
+    }
     return {
+      handleLayoutChange,
+      handleLayoutChange2,
       state
     }
   },
@@ -53,6 +62,7 @@ const App = {
           :rowHeight="30"
           :width="1200"
           :resizeHandles="state.availableHandles"
+          :onLayoutChange="handleLayoutChange"
         >
           <div key="a">a</div>
           <div key="b">b</div>
@@ -73,6 +83,7 @@ const App = {
           :cols="12"
           :rowHeight="30"
           :width="1200"
+          :onLayoutChange="handleLayoutChange2"
         >
           <div key="a" :data-grid="{ x: 0, y: 0, w: 1, h: 2, static: true }">
             a

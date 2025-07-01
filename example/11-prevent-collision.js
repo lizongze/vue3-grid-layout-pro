@@ -36,8 +36,12 @@ const App = {
       setTimeout(() => {
       }, 5000)
     })
-
+    const handleLayoutChange = (layout, newLayout) => {
+      console.log('layout change --', layout, newLayout)
+      state.layout = layout;
+    }
     return {
+      handleLayoutChange,
       state
     }
   },
@@ -63,6 +67,7 @@ const App = {
         :width="1200"
         :verticalCompact="false"
         :preventCollision="true"
+        :onLayoutChange="handleLayoutChange"
       >
         <div v-for="(item, i) in state.items" :key="i+1">
           <span class="text">{{i+1}}</span>

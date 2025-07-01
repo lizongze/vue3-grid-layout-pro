@@ -31,8 +31,12 @@ const App = {
       rowHeight: 30,
       layout: generateLayout(len),
     })
-
+    const handleLayoutChange = (layout, newLayout) => {
+      console.log('layout change --', layout, newLayout)
+      state.layout = layout;
+    }
     return {
+      handleLayoutChange,
       state
     }
   },
@@ -57,6 +61,7 @@ const App = {
         :rowHeight="30"
         :width="1200"
         :verticalCompact="false"
+        :onLayoutChange="handleLayoutChange"
       >
         <div v-for="(item, i) in state.items" :key="i+1">
           <span class="text">{{i+1}}</span>

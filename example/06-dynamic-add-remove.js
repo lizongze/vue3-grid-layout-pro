@@ -10,16 +10,18 @@ const App = {
   setup(props, { attrs }) {
     const state = reactive({
       layout: [],
-      items: [0, 1, 2, 3, 4].map(function(i, key, list) {
-        return {
-          i: i.toString(),
-          x: i * 2,
-          y: 0,
-          w: 2,
-          h: 2,
-          add: i === (list.length - 1)
-        };
-      }),
+      layouts: {
+        lg: [0, 1, 2, 3, 4].map(function(i, key, list) {
+      return {
+        i: i.toString(),
+        x: i * 2,
+        y: 0,
+        w: 2,
+        h: 2,
+        add: i === (list.length - 1)
+      };
+    }),
+      },
       newCounter: 0,
     })
 
@@ -63,15 +65,17 @@ const App = {
     const onAddItem = () => {
       /*eslint no-console: 0*/
       console.log("adding", "n" + state.newCounter);
-      state.items = state.items.concat({
+      const { lg } = state.layouts;
+      const newLg = lg.concat({
         i: "n" + state.newCounter,
-        x: (state.items.length * 2) % (state.cols || 12),
+        x: (lg.length * 2) % (state.cols || 12),
         y: Infinity, // puts it at the bottom
         w: 2,
         h: 2
       })
-      console.log('items', state.items)
+      console.log('items',newLg)
       state.newCounter = state.newCounter + 1
+      state.layouts = { lg: newLg };
     }
 
     const onBreakpointChange = ({ breakpoint, cols }) => {
@@ -81,10 +85,13 @@ const App = {
 
     const onLayoutChange = (layout, layouts) => {
       state.layout = layout;
+      if (layouts) {
+        state.layouts = layouts;
+      }
     }
 
     const onRemoveItem = (i) => {
-      state.items = state.items.filter(item => item.i !== i);
+      state.layouts = { lg: state.layouts.lg.filter(item => item.i !== i) };
     }
   
     return {
@@ -103,23 +110,25 @@ const App = {
   template: `
     <div>
       <h1>Vue Grid Layout</h1>
-      <div>{{state.items}}</div>
+      <div>{{state.layouts.lg}}</div>
       <ResponsiveVueGridLayout
-        @layoutChange="onLayoutChange"
+        :onLayoutChange="onLayoutChange"
         @breakpointChange="onBreakpointChange"
+        breakpoint="lg"
         :rowHeight="30"
+        :layouts="state.layouts"
         :containerPadding="[16, 16]"
       >
-        <div v-for="(el, i) in state.items" :key="el.add ? '+' : el.i" :data-grid="el">
+        <div v-for="(el, i) in state.layouts.lg" :key="el.add ? '+' : el.i" :data-grid="el">
           <span
-            v-if="el.add"
+            v-if="i === (state.layouts.lg.length - 1)"
             class="add text"
             @click="onAddItem"
             title="You can add an item by clicking here, too."
           >
-            Add +
+           Add +
           </span>
-          <span v-else class="text">{{ el.i }}</span>
+          <span v-else class="text">------{{ el.i }}</span>
           <span
             class="remove"
             :style="{

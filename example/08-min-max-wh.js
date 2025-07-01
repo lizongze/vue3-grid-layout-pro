@@ -17,7 +17,7 @@ const App = {
       
         const w = getRandom(1, 2);
         const h = getRandom(1, 3);
-      
+
         return {
           x: (i * 2) % 12,
           y: Math.floor(i / 6),
@@ -36,8 +36,12 @@ const App = {
       rowHeight: 30,
       layout: generateLayout(len),
     })
-
+    const handleLayoutChange = (layout, newLayout) => {
+      console.log('layout change --', layout, newLayout)
+      state.layout = layout;
+    }
     return {
+      handleLayoutChange,
       state
     }
   },
@@ -61,6 +65,7 @@ const App = {
         :cols="12"
         :rowHeight="30"
         :width="1200"
+        :onLayoutChange="handleLayoutChange"
       >
         <div v-for="(item, i) in state.items" :key="i+1">
           <span class="text">{{i+1}}</span>

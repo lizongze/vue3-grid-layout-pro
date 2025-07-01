@@ -1,6 +1,6 @@
 const {VueGridLayout: VGL, Vue: VueInstance} = window;
 const { createApp, ref, h, reactive, onMounted } = VueInstance
-
+// import { cloneDeep } from 'lodash';
 const { WidthProvider } = VGL
 const VueGridLayout = WidthProvider(VGL);
 
@@ -22,10 +22,21 @@ const App = {
     }
 
     const state = reactive({
-      layout: generateLayout()
+      layout: generateLayout(),
+      allowOverlap: true,
     })
-  
+
+    // setTimeout(() => {
+    //   state.allowOverlap = false;
+    // }, 5000)
+
+    const handleLayoutChange = (layout, newLayout) => {
+      console.log('layout change --', layout, newLayout)
+      state.layout = layout;
+    }
+
     return {
+      handleLayoutChange,
       state
     }
   },
@@ -49,8 +60,9 @@ const App = {
         v-model="state.layout"
         :rowHeight="30"
         :cols="12"
-        :allowOverlap="true"
+        :allowOverlap="state.allowOverlap"
         :containerPadding="[16, 16]"
+        :onLayoutChange="handleLayoutChange"
       >
         <div v-for="item in state.layout" :key="item.i">
           <span class="text">{{ item.i }}</span>

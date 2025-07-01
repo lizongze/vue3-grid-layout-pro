@@ -24,8 +24,13 @@ const App = {
     const state = reactive({
       layout: generateLayout()
     })
-  
+
+    const handleLayoutChange = (layout, newLayout) => {
+      console.log('layout change --', layout, newLayout)
+      state.layout = layout;
+    }
     return {
+      handleLayoutChange,
       state
     }
   },
@@ -49,6 +54,7 @@ const App = {
         :rowHeight="30"
         :cols="12"
         :containerPadding="[16, 16]"
+        :onLayoutChange="handleLayoutChange"
       >
         <div v-for="item in state.layout" :key="item.i">
           <span class="text">{{ item.i }}</span>

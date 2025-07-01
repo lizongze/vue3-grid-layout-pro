@@ -51,11 +51,17 @@ const App = {
     };
 
     const onBreakpointChange = ({ breakpoint }) => {
+      console.log('onBreakpointChange breakpoint ---', breakpoint);
       state.currentBreakpoint = breakpoint
     };
 
     const onLayoutChange = (layout, layouts) => {
-      state.layout = layout;
+      console.log('onLayoutChange layout, newLayout', layout, layouts)
+      const key = state.currentBreakpoint;
+      // state.layouts = { [key]: layout };
+      if (layouts) {
+        state.layouts = layouts;
+      }
     }
   
     return {
@@ -86,8 +92,10 @@ const App = {
         :rowHeight="30"
         :cols="state.cols"
         :layouts="state.layouts"
+        :isDraggable="true"
+        :isResizable="true"
         @breakpointChange={onBreakpointChange}
-        @layoutChange="onLayoutChange"
+        :onLayoutChange="onLayoutChange"
         :containerPadding="[16, 16]"
       >
         <div v-for="(l, i) in state.layouts.lg" :key="i+1" :class="{ static: l.static }">

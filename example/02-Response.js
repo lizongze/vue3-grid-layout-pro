@@ -65,6 +65,9 @@ const App = {
 
     const onLayoutChange = (layout, layouts) => {
       state.layout = layout;
+      if (layouts) {
+        state.layouts = layouts;
+      }
     }
   
 
@@ -120,7 +123,7 @@ const App = {
         :cols="state.cols"
         :layouts="state.layouts"
         @breakpointChange={onBreakpointChange}
-        @layoutChange="onLayoutChange"
+        :onLayoutChange="onLayoutChange"
         @drop="onDrop"
         :measureBeforeMount="false"
         :useCSSTransforms="state.mounted"
