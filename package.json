@@ -1,6 +1,6 @@
 {
   "name": "vue3-grid-layout-pro",
-  "version": "1.0.3-rc.5",
+  "version": "1.0.3-rc.6",
   "description": "A draggable and resizable grid layout with responsive breakpoints, for vue3.",
   "main": "build/cjs/cjs.js",
   "unpkg": "build/web/vue-grid-layout.min.js",
@@ -24,7 +24,7 @@
   "typings": "./typings/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/lizongze/vue3-grid-layout-pro.git"
+    "url": "git+https://github.com/lizongze/vue3-grid-layout-pro.git"
   },
   "keywords": [
     "vue3",
